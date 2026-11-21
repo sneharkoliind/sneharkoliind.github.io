@@ -106,3 +106,32 @@ nav a:hover, nav a.active { color: var(--text); background: var(--accent-soft); 
   nav { justify-content: flex-start; margin-left: -10px; }
   .hero { padding-top: 40px; }
 }
+
+/* ---- blog-first home ---- */
+.intro { padding: 64px 0 28px; }
+.intro h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); letter-spacing: -0.02em; max-width: 22ch; }
+.intro p { max-width: 62ch; margin: 0; }
+.featured { display: block; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 8px; color: var(--text); background: linear-gradient(135deg, var(--accent-soft), transparent 60%); }
+.featured:hover { text-decoration: none; border-color: var(--accent); }
+.featured .label { font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+.featured h2 { margin: 6px 0 8px; font-size: 1.5em; }
+.featured p { margin: 0 0 10px; color: var(--muted); }
+.year { font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 0 0 4px; }
+.post-group + .post-group { margin-top: 28px; }
+.post-list li { display: grid; grid-template-columns: 6.5em 1fr; gap: 16px; align-items: baseline; }
+.post-list .post-title { font-weight: 600; font-size: 1.08em; }
+a.tag:hover { text-decoration: none; filter: brightness(0.95); }
+.topics .tags { margin-top: 8px; }
+
+/* ---- about ---- */
+.page-head .lead { margin-bottom: 12px; }
+.page-head p { max-width: 68ch; }
+.career { list-style: none; padding: 0; margin: 0; }
+.career > li { padding: 14px 0; border-bottom: 1px solid var(--border); }
+.career-co { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; }
+.career-role { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 600px) {
+  .post-list li { grid-template-columns: 1fr; gap: 2px; }
+  .intro { padding-top: 36px; }
+}

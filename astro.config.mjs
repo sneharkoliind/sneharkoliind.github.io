@@ -8,4 +8,9 @@ export default defineConfig({
   site: process.env.SITE || "https://sneharkoliind.github.io",
   base: process.env.BASE_PATH || "/",
   integrations: [sitemap()],
+  // Old URLs keep working after the blog became the home page
+  redirects: {
+    "/experience": "/about",
+    "/blog": "/",
+  },
 });

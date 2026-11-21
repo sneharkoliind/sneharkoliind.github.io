@@ -15,14 +15,14 @@ const minutes = Math.max(1, Math.round((post.body ?? "").split(/\s+/).length / 2
 ---
 <Base title={post.data.title} description={post.data.description}>
   <article class="post">
-    <a href={url("/blog")} class="back">← All posts</a>
+    <a href={url("/")} class="back">← All posts</a>
     <h1>{post.data.title}</h1>
     <p class="muted small">
       {fmt(post.data.pubDate)}
       {post.data.updatedDate && <> · updated {fmt(post.data.updatedDate)}</>}
       {minutes && <> · {minutes} min read</>}
     </p>
-    {post.data.tags.length > 0 && <div class="tags">{post.data.tags.map((t) => <span class="tag">{t}</span>)}</div>}
+    {post.data.tags.length > 0 && <div class="tags">{post.data.tags.map((t) => <a class="tag" href={url(`/tags/${t}/`)}>{t}</a>)}</div>}
     <div class="prose"><Content /></div>
   </article>
 </Base>

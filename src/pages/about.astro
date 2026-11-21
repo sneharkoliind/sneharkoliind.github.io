@@ -1,0 +1,113 @@
+---
+import Base from "../layouts/Base.astro";
+import { url } from "../url";
+import resume from "../data/resume.json";
+import notes from "../data/career-notes.json";
+
+const b = resume.basics;
+const linkedin = b.links.find((l) => /linkedin/i.test(l.url))?.url;
+
+// Compact career timeline: one line per company, roles with dates, no bullet lists
+// (the full detail lives in the PDF resume).
+type Exp = (typeof resume.experience)[number];
+const groups: { company: string; location: string; roles: Exp[] }[] = [];
+for (const x of resume.experience) {
+  const last = groups[groups.length - 1];
+  if (last && last.company.trim().toLowerCase() === x.company.trim().toLowerCase()) last.roles.push(x);
+  else groups.push({ company: x.company, location: x.location, roles: [x] });
+}
+const dates = (a: string, z: string) => [a, z].filter((s) => s.trim()).join(" – ");
+const note = (company: string) => (notes as Record<string, string>)[company] ?? "";
+
+const highlights = [
+  {
+    title: "Agentic document intelligence",
+    text: "Took Broadridge's Intelligent Document Processing platform through three architectures: serverless (Lambda, SQS, Textract), multi-agent services with Google ADK on ECS, and Amazon Bedrock AgentCore.",
+  },
+  {
+    title: "Reliable event delivery",
+    text: "An enterprise event-notification framework: transactional outbox, Kafka fan-out and secure webhooks with idempotent delivery, replay and dead-letter handling.",
+  },
+  {
+    title: "LLM cost attribution",
+    text: "Per-client LLM usage metering and billing on an on-behalf-of architecture, tracing every model call to the client it serves.",
+  },
+  {
+    title: "Engineering standards",
+    text: "Zero-downtime releases, automated testing, MCP integrations, and AI-assisted development and code review with GitHub Copilot and Claude.",
+  },
+];
+const awards = resume.certifications.map((c) => c.trim()).filter(Boolean);
+const edu = resume.education[0];
+---
+<Base title="About" description={`${b.name}: ${b.headline}`}>
+  <section class="page-head">
+    <h1>About</h1>
+    <p class="lead">{b.headline}</p>
+    <p>
+      I design and build production systems that turn complex, high-volume workflows into reliable, scalable software.
+      At {groups[0]?.company} I lead backend and platform engineering for an agentic document-processing platform
+      used in financial-services workflows. I enjoy ambiguous problems, high ownership, and taking systems from
+      first design to dependable production.
+    </p>
+    <div class="cta">
+      <a class="btn" href={url("/resume.pdf")} target="_blank" rel="noopener">Resume (PDF)</a>
+      {linkedin && <a class="btn ghost" href={`https://${linkedin.replace(/^https?:\/\//, "")}`} target="_blank" rel="noopener">LinkedIn</a>}
+      {b.email && <a class="btn ghost" href={`mailto:${b.email}`}>Email</a>}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Selected work</h2>
+    <div class="cards">
+      {highlights.map((h) => (
+        <article class="card"><h3>{h.title}</h3><p>{h.text}</p></article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Career</h2>
+    <ol class="career">
+      {groups.map((g) => (
+        <li>
+          <div class="career-co">
+            <strong>{g.company}</strong>
+            {note(g.company) && <span class="muted">{note(g.company)}</span>}
+          </div>
+          {g.roles.map((r) => (
+            <div class="career-role">
+              <span>{r.role}</span>
+              <span class="muted small">{dates(r.start, r.end)}</span>
+            </div>
+          ))}
+        </li>
+      ))}
+    </ol>
+    <p class="muted small">Full detail in the <a href={url("/resume.pdf")} target="_blank" rel="noopener">PDF resume</a>.</p>
+  </section>
+
+  <section class="section">
+    <h2>Skills</h2>
+    <div class="skill-grid">
+      {resume.skills.map((s) => (
+        <div><h4>{s.group}</h4><p>{s.items.map((i) => i.trim()).filter(Boolean).join(", ")}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section two">
+    {edu && (
+      <div>
+        <h2>Education</h2>
+        <p>{edu.degree}<br /><span class="muted">{edu.school} · {dates(edu.start, edu.end)}</span></p>
+      </div>
+    )}
+    {awards.length > 0 && (
+      <div>
+        <h2>Awards</h2>
+        <p>{awards.join(" · ")}</p>
+      </div>
+    )}
+  </section>
+</Base>

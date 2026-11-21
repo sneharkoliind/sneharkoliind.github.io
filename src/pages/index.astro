@@ -1,95 +1,49 @@
 ---
-import { url } from "../url";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import PostList from "../components/PostList.astro";
+import { url } from "../url";
 import resume from "../data/resume.json";
 
-const b = resume.basics;
-const linkedin = b.links.find((l) => /linkedin/i.test(l.url))?.url;
-const current = resume.experience[0];
-
 const posts = (await getCollection("blog", ({ data }) => !data.draft))
-  .sort((a, z) => z.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
-const fmt = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-
-// Selected work, drawn from the resume
-const highlights = [
-  {
-    title: "Agentic document intelligence",
-    text: "Took Broadridge's Intelligent Document Processing platform through three architectures: serverless (Lambda, SQS, Textract), multi-agent services with Google ADK on ECS, and Amazon Bedrock AgentCore.",
-    tags: ["Agentic AI", "AWS", "AgentCore"],
-  },
-  {
-    title: "Reliable event delivery",
-    text: "Designed an enterprise event-notification framework: transactional outbox, Kafka fan-out and secure webhooks with idempotent delivery, replay and dead-letter handling.",
-    tags: ["Kafka", "Distributed systems"],
-  },
-  {
-    title: "LLM cost attribution",
-    text: "Built per-client LLM usage metering and billing on an on-behalf-of architecture, tracing every model call to the client it serves.",
-    tags: ["LLMs", "Platform"],
-  },
-  {
-    title: "Engineering standards",
-    text: "Zero-downtime releases, automated testing, MCP integrations, and AI-assisted development and code review with GitHub Copilot and Claude.",
-    tags: ["MCP", "CI/CD", "AI-assisted dev"],
-  },
-];
+  .sort((a, z) => z.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const [featured, ...rest] = posts;
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+const current = resume.experience[0];
+const fmt = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 ---
-<Base>
-  <section class="hero">
-    <p class="eyebrow">{current.role} at {current.company} · {b.location}</p>
-    <h1>{b.name}</h1>
-    <p class="lead">{b.headline}</p>
-    <p class="summary">{resume.summary}</p>
-    <div class="cta">
-      <a class="btn" href={url("/resume.pdf")} target="_blank" rel="noopener">Download resume</a>
-      <a class="btn ghost" href={url("/experience")}>Experience</a>
-      {linkedin && <a class="btn ghost" href={`https://${linkedin.replace(/^https?:\/\//, "")}`} target="_blank" rel="noopener">LinkedIn</a>}
-    </div>
+<Base description="Notes on backend systems, distributed architecture and AI platforms in production.">
+  <section class="intro">
+    <h1>Notes on building backend systems and AI platforms</h1>
+    <p class="muted">
+      I'm {resume.basics.name}, {current.role} at {current.company}. I write about distributed systems,
+      Python backends and running agentic AI in production. <a href={url("/about")}>More about me →</a>
+    </p>
   </section>
 
-  <section class="section">
-    <h2>Selected work</h2>
-    <div class="cards">
-      {highlights.map((h) => (
-        <article class="card">
-          <h3>{h.title}</h3>
-          <p>{h.text}</p>
-          <div class="tags">{h.tags.map((t) => <span class="tag">{t}</span>)}</div>
-        </article>
-      ))}
-    </div>
-  </section>
+  {featured ? (
+    <>
+      <a class="featured" href={url(`/blog/${featured.id}/`)}>
+        <span class="label">Latest</span>
+        <h2>{featured.data.title}</h2>
+        <p>{featured.data.description}</p>
+        <span class="muted small">{fmt(featured.data.pubDate)} · Read →</span>
+      </a>
 
-  <section class="section">
-    <div class="section-head">
-      <h2>Latest writing</h2>
-      <a href={url("/blog")}>All posts →</a>
-    </div>
-    {posts.length === 0
-      ? <p class="muted">First posts coming soon.</p>
-      : <ul class="post-list">
-          {posts.map((p) => (
-            <li>
-              <a href={url(`/blog/${p.id}/`)}>{p.data.title}</a>
-              <span class="muted small">{fmt(p.data.pubDate)}</span>
-              <p class="muted">{p.data.description}</p>
-            </li>
-          ))}
-        </ul>}
-  </section>
+      {rest.length > 0 && (
+        <section class="section">
+          <PostList posts={rest} groupByYear />
+        </section>
+      )}
 
-  <section class="section">
-    <h2>Skills</h2>
-    <div class="skill-grid">
-      {resume.skills.map((s) => (
-        <div>
-          <h4>{s.group}</h4>
-          <p>{s.items.map((i) => i.trim()).filter(Boolean).join(", ")}</p>
-        </div>
-      ))}
-    </div>
-  </section>
+      {tags.length > 1 && (
+        <section class="section topics">
+          <h2 class="year">Topics</h2>
+          <div class="tags">{tags.map((t) => <a class="tag" href={url(`/tags/${t}/`)}>{t}</a>)}</div>
+        </section>
+      )}
+    </>
+  ) : (
+    <p class="muted">First posts coming soon.</p>
+  )}
 </Base>

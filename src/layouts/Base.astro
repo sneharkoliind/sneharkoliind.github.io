@@ -6,13 +6,12 @@ import resume from "../data/resume.json";
 interface Props { title?: string; description?: string }
 const { title, description = resume.summary } = Astro.props;
 const name = resume.basics.name;
-const fullTitle = title ? `${title} | ${name}` : `${name} | ${resume.basics.headline}`;
+const fullTitle = title ? `${title} | ${name}` : `${name} | Notes on backend systems and AI platforms`;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const path = Astro.url.pathname.replace(base, "").replace(/\/$/, "") || "/";
 const nav = [
-  { href: "/", label: "Home" },
-  { href: "/experience", label: "Experience" },
-  { href: "/blog", label: "Blog" },
+  { href: "/", label: "Writing", match: (p: string) => p === "/" || p.startsWith("/blog") || p.startsWith("/tags") },
+  { href: "/about", label: "About", match: (p: string) => p.startsWith("/about") },
 ];
 const linkedin = resume.basics.links.find((l) => /linkedin/i.test(l.url))?.url;
 const year = new Date().getFullYear();
@@ -37,7 +36,7 @@ const year = new Date().getFullYear();
         <a href={url("/")} class="logo">{name}</a>
         <nav>
           {nav.map((n) => (
-            <a href={url(n.href)} class={(n.href === "/" ? path === "/" : path.startsWith(n.href)) ? "active" : ""}>{n.label}</a>
+            <a href={url(n.href)} class={n.match(path) ? "active" : ""}>{n.label}</a>
           ))}
           <a href={url("/resume.pdf")} class="btn-small" target="_blank" rel="noopener">Resume</a>
         </nav>

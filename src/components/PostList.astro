@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { url } from "../url";
+
+interface Props { posts: CollectionEntry<"blog">[]; groupByYear?: boolean }
+const { posts, groupByYear = false } = Astro.props;
+const fmt = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+const fmtY = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+const groups: { year: number | null; items: CollectionEntry<"blog">[] }[] = [];
+for (const p of posts) {
+  const y = groupByYear ? p.data.pubDate.getFullYear() : null;
+  const last = groups[groups.length - 1];
+  if (last && last.year === y) last.items.push(p);
+  else groups.push({ year: y, items: [p] });
+}
+---
+{groups.map((g) => (
+  <section class="post-group">
+    {g.year && <h2 class="year">{g.year}</h2>}
+    <ul class="post-list">
+      {g.items.map((p) => (
+        <li>
+          <time class="muted small" datetime={p.data.pubDate.toISOString()}>{groupByYear ? fmt(p.data.pubDate) : fmtY(p.data.pubDate)}</time>
+          <div>
+            <a class="post-title" href={url(`/blog/${p.id}/`)}>{p.data.title}</a>
+            <p class="muted">{p.data.description}</p>
+            {p.data.tags.length > 0 && (
+              <div class="tags">{p.data.tags.map((t) => <a class="tag" href={url(`/tags/${t}/`)}>{t}</a>)}</div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+))}
