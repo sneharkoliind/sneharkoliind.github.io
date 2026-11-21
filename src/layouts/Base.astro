@@ -1,0 +1,60 @@
+---
+import "../styles/global.css";
+import resume from "../data/resume.json";
+
+interface Props { title?: string; description?: string }
+const { title, description = resume.summary } = Astro.props;
+const name = resume.basics.name;
+const fullTitle = title ? `${title} | ${name}` : `${name} | ${resume.basics.headline}`;
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/experience", label: "Experience" },
+  { href: "/blog", label: "Blog" },
+];
+const linkedin = resume.basics.links.find((l) => /linkedin/i.test(l.url))?.url;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title={`${name} blog`} href="/rss.xml" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231e293b'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='700' font-size='30' fill='%23a5b4fc'>SK</text></svg>" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a href="/" class="logo">{name}</a>
+        <nav>
+          {nav.map((n) => (
+            <a href={n.href} class={(n.href === "/" ? path === "/" : path.startsWith(n.href)) ? "active" : ""}>{n.label}</a>
+          ))}
+          <a href="/resume.pdf" class="btn-small" target="_blank" rel="noopener">Resume</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <span>© {year} {name}</span>
+        <span class="footer-links">
+          {resume.basics.email && <a href={`mailto:${resume.basics.email}`}>Email</a>}
+          {linkedin && <a href={`https://${linkedin.replace(/^https?:\/\//, "")}`} target="_blank" rel="noopener">LinkedIn</a>}
+          <a href="/rss.xml">RSS</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

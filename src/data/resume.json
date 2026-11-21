@@ -1,0 +1,152 @@
+{
+  "version": 8,
+  "label": "Added MCP to Technology Lead",
+  "synced": "2026-11-21T16:05:01.656Z",
+  "basics": {
+    "name": "Snehar Koli",
+    "headline": "Technology Lead | Python Backend & Distributed Systems",
+    "email": "snehar.koli.india@gmail.com",
+    "phone": "",
+    "location": "Bengaluru, India",
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "linkedin.com/in/kolisnehar"
+      }
+    ]
+  },
+  "summary": "Technology Lead with 7+ years building production backend systems in Python. Leads cloud-native, event-driven platforms for financial-services workflows at Broadridge, with a track record of designing and shipping multiple scalable, mission-critical systems on AWS. Brings depth in resilient distributed architecture with Kafka, PostgreSQL, DynamoDB and Redis, and in engineering practices that keep delivery fast and safe: zero-downtime releases, automated testing and AI-assisted development.",
+  "experience": [
+    {
+      "company": "Broadridge",
+      "role": "Technology Lead",
+      "location": "Bengaluru",
+      "start": "Aug 2026",
+      "end": "Present",
+      "bullets": [
+        "Lead backend engineering for Broadridge's enterprise document-processing platform: Python (Flask, Django) services on AWS with REST and WebSocket APIs over PostgreSQL, DynamoDB and Redis",
+        "Architect durable, event-driven processing for high-volume workloads, with parallel execution, suspend/resume, idempotency and failure recovery",
+        "Designed an enterprise event-notification framework (transactional outbox, Kafka fan-out, secure webhooks) with idempotent delivery, replay and dead-letter handling",
+        "Drive the migration of the platform's core agents (splitter, classifier, extractor) from Google ADK on Amazon ECS to Amazon Bedrock AgentCore",
+        "Build and integrate MCP (Model Context Protocol) servers that give the platform's AI agents standardised, secure access to tools and enterprise data",
+        "Uphold engineering standards: zero-downtime releases, automated testing, and AI-assisted development and code review with GitHub Copilot and Claude",
+        "Set technical direction through trade-off analysis of scalability, accuracy, resilience and cost across OCR and GPT-vision approaches"
+      ]
+    },
+    {
+      "company": "Broadridge",
+      "role": "Senior Member of Technical Staff, AI Enablement",
+      "location": "Bengaluru",
+      "start": "May 2022",
+      "end": "Aug 2026",
+      "bullets": [
+        "Architected and built IDP v2, a mission-critical serverless platform on AWS Lambda, Amazon SQS and Amazon Textract, processing 10,000+ documents/day within sub-5-minute SLAs",
+        "Re-architected the platform into containerised multi-agent services (Google ADK on Amazon ECS) behind an OpenAPI job-submission API",
+        "Built per-client LLM usage metering and billing on an on-behalf-of (OBO) architecture, attributing every model call to the originating client for accurate cost tracking and chargeback",
+        "Combined OCR, image recognition and generative-AI extraction on OpenAI GPT models, from GPT-4 through the latest generation, to cut manual effort by 80%+ and reduce turnaround from hours to minutes"
+      ]
+    },
+    {
+      "company": "Saara Inc",
+      "role": "Full Stack Engineer",
+      "location": "Bengaluru",
+      "start": "Dec 2020",
+      "end": "Apr 2022",
+      "bullets": [
+        "Led full-stack development of a Shopify-integrated B2B SaaS returns platform (Python, Django, Angular) for global e-commerce merchants",
+        "Built the core merchant workflows (onboarding, catalog, order management and configurable returns and exchanges) that helped merchants reduce unnecessary returns",
+        "Integrated carrier APIs (UPS, DHL, XpressBees, Shiprocket) to automate shipping, labelling, tracking and reverse logistics",
+        "Reworked CI/CD and deployment processes, shortening release cycles by ~30%"
+      ]
+    },
+    {
+      "company": "Suven Consultants & Technology",
+      "role": "Full Stack Developer",
+      "location": "Mumbai",
+      "start": "Jul 2019",
+      "end": "Nov 2020",
+      "bullets": [
+        "Designed a microservices-based HR screening tool that automated resume parsing, candidate scoring and recruitment workflows",
+        "Built client web applications with Django, Angular, PHP and MySQL, including a MOOC platform with assessments and reporting",
+        "Designed and taught an advanced ML/NLP curriculum, mentoring learners through end-to-end projects"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Vivekanand Education Society's Institute of Technology",
+      "degree": "Bachelor's degree, Control Instrumentation & Electronics",
+      "start": "2013",
+      "end": "2017",
+      "details": ""
+    }
+  ],
+  "skills": [
+    {
+      "group": "Backend",
+      "items": [
+        "Python",
+        "Flask",
+        "Django",
+        "REST/OpenAPI",
+        "WebSockets",
+        "Microservices"
+      ]
+    },
+    {
+      "group": "Architecture",
+      "items": [
+        "Distributed systems",
+        "Event-driven design",
+        "Transactional outbox",
+        "Idempotency",
+        "Failure recovery"
+      ]
+    },
+    {
+      "group": "Data & messaging",
+      "items": [
+        "PostgreSQL",
+        "DynamoDB",
+        "Redis",
+        "MySQL",
+        "Kafka",
+        "Amazon SQS"
+      ]
+    },
+    {
+      "group": "Cloud & delivery",
+      "items": [
+        "AWS (Lambda, ECS, serverless)",
+        "Terraform",
+        "CI/CD",
+        "Zero-downtime deployments",
+        "Automated testing",
+        "Agile/Scrum"
+      ]
+    },
+    {
+      "group": "AI",
+      "items": [
+        "AI-assisted development (GitHub Copilot, Claude)",
+        "Amazon Bedrock AgentCore",
+        "MCP (Model Context Protocol)",
+        "Google ADK",
+        "RAG",
+        "OpenAI GPT (GPT-4 to latest)"
+      ]
+    },
+    {
+      "group": "Frontend",
+      "items": [
+        "Angular"
+      ]
+    }
+  ],
+  "projects": [],
+  "certifications": [
+    "ACE Award (multiple)",
+    "Key Contributor Award",
+    "Agentic AI Hackathon (award)"
+  ]
+}
