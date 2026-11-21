@@ -6,5 +6,6 @@ import sitemap from "@astrojs/sitemap";
 // (the deploy workflow sets it automatically).
 export default defineConfig({
   site: process.env.SITE || "https://sneharkoliind.github.io",
+  base: process.env.BASE_PATH || "/",
   integrations: [sitemap()],
 });

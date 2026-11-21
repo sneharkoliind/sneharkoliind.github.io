@@ -1,4 +1,5 @@
 ---
+import { url } from "../url";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import resume from "../data/resume.json";
@@ -43,8 +44,8 @@ const highlights = [
     <p class="lead">{b.headline}</p>
     <p class="summary">{resume.summary}</p>
     <div class="cta">
-      <a class="btn" href="/resume.pdf" target="_blank" rel="noopener">Download resume</a>
-      <a class="btn ghost" href="/experience">Experience</a>
+      <a class="btn" href={url("/resume.pdf")} target="_blank" rel="noopener">Download resume</a>
+      <a class="btn ghost" href={url("/experience")}>Experience</a>
       {linkedin && <a class="btn ghost" href={`https://${linkedin.replace(/^https?:\/\//, "")}`} target="_blank" rel="noopener">LinkedIn</a>}
     </div>
   </section>
@@ -65,14 +66,14 @@ const highlights = [
   <section class="section">
     <div class="section-head">
       <h2>Latest writing</h2>
-      <a href="/blog">All posts →</a>
+      <a href={url("/blog")}>All posts →</a>
     </div>
     {posts.length === 0
       ? <p class="muted">First posts coming soon.</p>
       : <ul class="post-list">
           {posts.map((p) => (
             <li>
-              <a href={`/blog/${p.id}/`}>{p.data.title}</a>
+              <a href={url(`/blog/${p.id}/`)}>{p.data.title}</a>
               <span class="muted small">{fmt(p.data.pubDate)}</span>
               <p class="muted">{p.data.description}</p>
             </li>

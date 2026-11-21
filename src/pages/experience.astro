@@ -1,4 +1,5 @@
 ---
+import { url } from "../url";
 import Base from "../layouts/Base.astro";
 import resume from "../data/resume.json";
 
@@ -15,7 +16,7 @@ const awards = resume.certifications.map((c) => c.trim()).filter(Boolean);
 <Base title="Experience" description={`Experience of ${resume.basics.name}: ${resume.basics.headline}`}>
   <section class="page-head">
     <h1>Experience</h1>
-    <p class="muted">7+ years building production backend systems and AI platforms. <a href="/resume.pdf" target="_blank" rel="noopener">Download the PDF resume</a>.</p>
+    <p class="muted">7+ years building production backend systems and AI platforms. <a href={url("/resume.pdf")} target="_blank" rel="noopener">Download the PDF resume</a>.</p>
   </section>
 
   <section class="timeline">

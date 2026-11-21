@@ -1,4 +1,5 @@
 ---
+import { url } from "../../url";
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 
@@ -14,7 +15,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: 
   <ul class="post-list">
     {posts.map((p) => (
       <li>
-        <a href={`/blog/${p.id}/`}>{p.data.title}</a>
+        <a href={url(`/blog/${p.id}/`)}>{p.data.title}</a>
         <span class="muted small">{fmt(p.data.pubDate)}</span>
         <p class="muted">{p.data.description}</p>
         {p.data.tags.length > 0 && <div class="tags">{p.data.tags.map((t) => <span class="tag">{t}</span>)}</div>}
