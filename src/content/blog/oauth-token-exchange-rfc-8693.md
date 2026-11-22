@@ -208,6 +208,48 @@ Token exchange doesn't make tokens live longer, and it shouldn't. Short-lived to
 
 How the subject is represented for the length of a job varies by identity provider. Some issue a job-scoped subject token at submission, and some let the actor exchange against a stored delegation. The principle is the same either way: the **authorization server**, not the calling service, vouches for "on behalf of whom".
 
+## Keep tokens out of queues and logs
+
+A delegated token is a bearer token: **whoever holds it can spend customer A's budget** until it expires. Two places it tends to leak in event-driven systems:
+
+**1. Message queues (Kafka, SQS).** It's tempting to put the token in the job event so the next worker can use it. Don't:
+
+- Messages are **stored**: retention periods, replicas, dead-letter queues, replays. A token in a message is readable by anyone who can read the topic, long after it was sent.
+- By the time a consumer picks the message up, the token may have **expired** anyway.
+
+Instead, put **identifiers** in the event and let each worker get its own fresh token right before the call:
+
+```jsonc
+// ✅ event on the topic
+{ "job_id": "j-4821", "customer_id": "customer-a", "step": "extract" }
+
+// ❌ never
+{ "job_id": "j-4821", "access_token": "eyJhbGciOi..." }
+```
+
+The worker then performs the token exchange itself, so the delegation policy is checked again at the moment of use.
+
+**2. Logs and traces.** Request logging, error reports and LLM tracing tools happily capture headers. Redact `Authorization` (and any `*_token` field) before anything is written, and log the **non-secret claims** instead. They're all an auditor needs:
+
+```python
+import logging, re
+
+TOKEN = re.compile(r"(Bearer\s+|\b(?:access|subject|actor|refresh)_token(?:\"\s*:\s*\"|=))[A-Za-z0-9\-_.]+")
+
+class RedactTokens(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        record.msg = TOKEN.sub(r"\1[REDACTED]", str(record.msg))
+        return True
+
+log = logging.getLogger("llm-gateway")
+log.addFilter(RedactTokens())
+
+# Audit what happened without the secret itself:
+log.info("llm call", extra={"sub": "customer-a", "act": "doc-service", "jti": "7f3c…", "scope": "llm.invoke"})
+```
+
+The same applies to webhooks and event notifications: identify the job and **sign the payload** (for example with an HMAC), but never include a token in it.
+
 ## Before and after
 
 | | Header approach | Token exchange (delegation) |
@@ -229,6 +271,7 @@ If you've used Microsoft Entra ID, you may know the **On-Behalf-Of (OBO) flow**.
 - **Token exchange** turns "trust me, this is for customer A" into a **signed claim** from the authorization server.
 - Prefer **delegation** (with `act`) over impersonation, because you keep both identities for billing and auditing.
 - Keep exchanged tokens **narrow**: specific `audience`, minimal `scope`, short `expires_in`.
+- Keep tokens **out of queues, logs and traces**: pass IDs in events, exchange at the moment of use, and redact anything that looks like a token.
 
 The pattern is small, but it fixes a whole class of problems: billing, quotas, audit and least privilege, all from one well-designed token.
 
